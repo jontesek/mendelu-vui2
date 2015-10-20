@@ -55,9 +55,6 @@ docs/_build/
 
 # PyBuilder
 target/
-<<<<<<< HEAD
 
 # PyCharms
-.idea/
-=======
->>>>>>> aa407cf232b8c73bfbf2fefc962b2177cdd86141
+#.idea/
