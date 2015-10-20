@@ -1,0 +1,26 @@
+Kanibalové
+øešení
+
+Stav: 3M, 3K | 0M, 0K
+Tam: M + K
+Stav: 2M, 2K | 1M, 1K
+Zpìt: M
+Stav: 3M, 2K | 0M, 1K
+Tam: K + K
+Stav: 3M, 0K | 0M, 3K
+Zpìt: K
+Stav: 3M, 1K | 0M, 2K
+Tam: M + M
+Stav: 1M, 1K | 2M, 2K
+Zpìt: M + K
+Stav: 2M, 2K | 1M, 1K
+Tam: M + M
+Stav: 0M, 2K | 3M, 1K
+Zpìt: K
+Stav: 0M, 3K | 3M, 0K
+Tam: K + K
+Stav: 0M, 1K | 3M, 2K
+Zpìt: M
+Stav: 1M, 1K | 2M, 2K
+Tam: M + K
+Stav: 0M, 0K | 3M, 3K
