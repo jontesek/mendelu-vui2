@@ -1,6 +1,5 @@
 from src.MissionaryWorld import MissionaryWorld
 
-world = MissionaryWorld()
+world = MissionaryWorld('3')
 
-world.generate_bfs_tree()
-world.get_shortest_solution()
+world.generate_tree('BFS')
