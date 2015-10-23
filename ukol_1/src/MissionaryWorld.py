@@ -15,11 +15,17 @@ class MissionaryWorld(object):
         # Transportation of people by the boat (1 or 2 persons possible)
         self.operators = [(1,0),(2,0),(0,1),(0,2),(1,1)] # (number of missionaries, number of cannibals)
         # State representation: left bank, right bank: (number of missionaries, number of cannibals, number of boats)
-        if number_of_cannibals == '3':
+        if number_of_cannibals == 3:
             self.start_state = ((3,3,1),(0,0,0))
             self.target_state = ((0,0,0),(3,3,1))
+        elif number_of_cannibals == 2:
+            self.start_state = ((2,2,1),(0,0,0))
+            self.target_state = ((0,0,0),(2,2,1))
+        elif number_of_cannibals == 4:
+            self.start_state = ((4,4,1),(0,0,0))
+            self.target_state = ((0,0,0),(4,4,1))
         # Max level depth for DFS
-        self.dfs_max_depth = 100
+        self.dfs_max_depth = 10000
 
     def generate_tree(self, search_type):
         """Create a tree using the selected method and find the first solution.
@@ -133,12 +139,8 @@ class MissionaryWorld(object):
         nodes_path.append(self.state_tree['nodes'][0])
         # Show the path.
         nodes_path.reverse()
+        print("=========Solution=========")
         for state in nodes_path:
             print('%d (%d): %s, %s <- %s') % (state['level'], state['id'], state['left'], state['right'], state['used_op'])
-
         # Show the number of steps.
         print('The lowest number of steps for the problem solution: %d') % (len(nodes_path) - 1)
-
-
-    def _get_node(self, node_id):
-        return self.state_tree['nodes'][node_id]

@@ -1,5 +1,5 @@
 from src.MissionaryWorld import MissionaryWorld
 
-world = MissionaryWorld('3')
+world = MissionaryWorld(4)
 
-world.generate_tree('BFS')
+world.generate_tree('DFS')
