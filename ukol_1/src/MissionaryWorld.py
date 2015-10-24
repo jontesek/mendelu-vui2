@@ -8,7 +8,7 @@ class MissionaryWorld(object):
         """Object constructor
 
         Keyword arguments:
-        number of cannibals -- same as number of missionaries (2,3,4)
+        number of cannibals --integer: same as number of missionaries (2,3,4)
         """
         # Graph representation of the state space: nodes = states, edges = operators
         self.state_tree = {'nodes': {}}
@@ -25,14 +25,14 @@ class MissionaryWorld(object):
             self.start_state = ((4,4,1),(0,0,0))
             self.target_state = ((0,0,0),(4,4,1))
         # Max level depth for DFS
-        self.dfs_max_depth = 10000
+        self.dfs_max_depth = 100
 
     def generate_tree(self, search_type):
         """Create a tree using the selected method and find the first solution.
         BFS finds the optimal solution, while DFS might or might not.
 
         Keyword arguments:
-        search_type -- BFS or DFS
+        search_type --string: BFS or DFS
         """
         # Create a data structure for nodes list
         if search_type == 'BFS':
@@ -48,8 +48,8 @@ class MissionaryWorld(object):
         while not nodes_list_structure.empty():
             # Get node from the structure
             examined_node = nodes_list_structure.get()
-            print('==========examined node %d===========') % examined_node['id']
-            print(examined_node)
+            #print('==========examined node %d===========') % examined_node['id']
+            #print(examined_node)
             # Generate new possible states from the node.
             new_children = self._generate_tree_level(examined_node)
             # Add new nodes to the graph.
@@ -57,14 +57,14 @@ class MissionaryWorld(object):
                 # Assign a new node ID and level number
                 child_node['id'] = node_id
                 child_node['level'] = examined_node['level'] + 1
-                print('++++child added:'+str(child_node))
+                #print('++++child added:'+str(child_node))
                 # Add child to the graph
                 self.state_tree['nodes'][node_id] = child_node
                 # increment node ID
                 node_id = node_id + 1
                 # Check if it is a target node.
                 if child_node['left'] == self.target_state[0] and child_node['right'] == self.target_state[1]:
-                    print('->OK: found solution: '+str(child_node))
+                    #print('->OK: found solution: '+str(child_node))
                     self._show_solution(child_node)
                     return # Target state reached - end the script.
             # For DFS - check if the level is not too deep.
@@ -79,7 +79,7 @@ class MissionaryWorld(object):
         new_nodes = []
         for op in self.operators:
             new_state = self._check_new_state(current_state, op)
-            print('operator: ' + str(op) + str(new_state))
+            #print('operator: ' + str(op) + str(new_state))
             if new_state:
                 new_nodes.append(new_state)
         return new_nodes
@@ -125,6 +125,9 @@ class MissionaryWorld(object):
                 previous_state = self.state_tree['nodes'][current_state['parent_id']]
                 if new_state['left'] == previous_state['left'] and new_state['right'] == previous_state['right']:
                     return False    # do nothing
+            # Check that the new state is not the same as the root state.
+            if new_state['left'] == self.state_tree['nodes'][0]['left'] and new_state['right'] == self.state_tree['nodes'][0]['right']:
+                return False
             # return result
             return new_state
 
@@ -141,6 +144,7 @@ class MissionaryWorld(object):
         nodes_path.reverse()
         print("=========Solution=========")
         for state in nodes_path:
-            print('%d (%d): %s, %s <- %s') % (state['level'], state['id'], state['left'], state['right'], state['used_op'])
+            print('%d. (%d): %s, %s <- %s') % (state['level'], state['id'], state['left'], state['right'], state['used_op'])
         # Show the number of steps.
+        print
         print('The lowest number of steps for the problem solution: %d') % (len(nodes_path) - 1)
