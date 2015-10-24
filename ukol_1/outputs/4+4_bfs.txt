@@ -1,0 +1,22 @@
+===program start===
+++++child added:{'right': (0, 1, 1), 'used_op': (0, 1), 'level': 1, 'parent_id': 0, 'id': 1, 'left': (4, 3, 0)}
+++++child added:{'right': (0, 2, 1), 'used_op': (0, 2), 'level': 1, 'parent_id': 0, 'id': 2, 'left': (4, 2, 0)}
+++++child added:{'right': (1, 1, 1), 'used_op': (1, 1), 'level': 1, 'parent_id': 0, 'id': 3, 'left': (3, 3, 0)}
+++++child added:{'right': (0, 1, 0), 'used_op': (0, 1), 'level': 2, 'parent_id': 2, 'id': 4, 'left': (4, 3, 1)}
+++++child added:{'right': (0, 1, 0), 'used_op': (1, 0), 'level': 2, 'parent_id': 3, 'id': 5, 'left': (4, 3, 1)}
+++++child added:{'right': (1, 1, 1), 'used_op': (1, 0), 'level': 3, 'parent_id': 4, 'id': 6, 'left': (3, 3, 0)}
+++++child added:{'right': (0, 3, 1), 'used_op': (0, 2), 'level': 3, 'parent_id': 4, 'id': 7, 'left': (4, 1, 0)}
+++++child added:{'right': (0, 2, 1), 'used_op': (0, 1), 'level': 3, 'parent_id': 5, 'id': 8, 'left': (4, 2, 0)}
+++++child added:{'right': (0, 3, 1), 'used_op': (0, 2), 'level': 3, 'parent_id': 5, 'id': 9, 'left': (4, 1, 0)}
+++++child added:{'right': (0, 2, 0), 'used_op': (0, 1), 'level': 4, 'parent_id': 7, 'id': 10, 'left': (4, 2, 1)}
+++++child added:{'right': (0, 2, 0), 'used_op': (0, 1), 'level': 4, 'parent_id': 9, 'id': 11, 'left': (4, 2, 1)}
+++++child added:{'right': (2, 2, 1), 'used_op': (2, 0), 'level': 5, 'parent_id': 10, 'id': 12, 'left': (2, 2, 0)}
+++++child added:{'right': (0, 4, 1), 'used_op': (0, 2), 'level': 5, 'parent_id': 10, 'id': 13, 'left': (4, 0, 0)}
+++++child added:{'right': (2, 2, 1), 'used_op': (2, 0), 'level': 5, 'parent_id': 11, 'id': 14, 'left': (2, 2, 0)}
+++++child added:{'right': (0, 4, 1), 'used_op': (0, 2), 'level': 5, 'parent_id': 11, 'id': 15, 'left': (4, 0, 0)}
+++++child added:{'right': (1, 1, 0), 'used_op': (1, 1), 'level': 6, 'parent_id': 12, 'id': 16, 'left': (3, 3, 1)}
+++++child added:{'right': (0, 3, 0), 'used_op': (0, 1), 'level': 6, 'parent_id': 13, 'id': 17, 'left': (4, 1, 1)}
+++++child added:{'right': (1, 1, 0), 'used_op': (1, 1), 'level': 6, 'parent_id': 14, 'id': 18, 'left': (3, 3, 1)}
+++++child added:{'right': (0, 3, 0), 'used_op': (0, 1), 'level': 6, 'parent_id': 15, 'id': 19, 'left': (4, 1, 1)}
+No solution was found.
+===program end===

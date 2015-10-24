@@ -10,6 +10,9 @@ class MissionaryWorld(object):
         Keyword arguments:
         number of cannibals --integer: same as number of missionaries (2,3,4)
         """
+        # check argument
+        if number_of_cannibals not in [2,3,4]:
+            exit('Bad number of cannibals entered - must be 2, 3 or 4.')
         # Graph representation of the state space: nodes = states, edges = operators
         self.state_tree = {'nodes': {}}
         # Transportation of people by the boat (1 or 2 persons possible)
@@ -34,11 +37,13 @@ class MissionaryWorld(object):
         Keyword arguments:
         search_type --string: BFS or DFS
         """
-        # Create a data structure for nodes list
+        # Check argument and create a data structure for nodes list
         if search_type == 'BFS':
             nodes_list_structure = Queue.Queue()     # FIFO
-        else:
+        elif search_type == 'DFS':
             nodes_list_structure = Queue.LifoQueue() # LIFO
+        else:
+            exit('Bad search type entered - must be BFS or DFS.')
         # Create and insert root node
         root_node = {'left': self.start_state[0], 'right': self.start_state[1], 'parent_id': None, 'id': 0, 'level': 0, 'used_op': None}
         self.state_tree['nodes'][0] = root_node
@@ -73,6 +78,8 @@ class MissionaryWorld(object):
             # Add new nodes to the structure.
             for child_node in new_children:
                 nodes_list_structure.put(child_node)
+        # No solution was found
+        print('No solution was found.')
 
     def _generate_tree_level(self, current_state):
         """Generate new nodes (children) for all possibilities."""
