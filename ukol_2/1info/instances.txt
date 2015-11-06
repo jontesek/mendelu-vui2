@@ -1,0 +1,11 @@
+The harders instances:
+http://w01fe.com/blog/2009/01/the-hardest-eight-puzzle-instances-take-31-moves-to-solve/
+8 6 7
+2 5 4
+3 . 1
+
+6 4 7
+8 5 .
+3 2 1
+
+Both require at least 31 moves to solve. All other instances can be solved in 30 moves or less.

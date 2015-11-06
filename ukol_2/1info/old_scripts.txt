@@ -1,0 +1,6 @@
+def get_tile_coordinates_by_name(self, tile_name, state):
+        for t_name, xy in state.iteritems():
+            if tile_name == t_name:
+                return xy
+
+                
