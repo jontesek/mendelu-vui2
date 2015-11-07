@@ -1,0 +1,5 @@
+=====h2 - BULK RUN STATS=====
+Total puzzles: 100000
+Total solved puzzles: 10672
+Percentual effectivity of the algorithm: 10.672 %
+

@@ -50,3 +50,17 @@ def get_tile_coordinates_by_name(self, tile_name, state):
                 valid_states_2.append(state)
         # result
         return valid_states_2
+
+      """
+            # Check if the best state has a lower or the same h value than the current state.
+            # If yes, another step in solution was found.
+            if best_state['h_value'] <= current_state['h_value']:
+                self.solution_path.append(best_state)
+                current_state = best_state
+            # If no, the puzzle has no solution - end the program.
+            else:
+                print('No solution found in %d moves.') % len(self.solution_path)
+                return False
+                #print(self.solution_path)
+                exit()
+      """

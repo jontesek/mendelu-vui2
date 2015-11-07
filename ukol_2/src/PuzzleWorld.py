@@ -19,76 +19,74 @@ class PuzzleWorld(object):
         }
         # Path from start state to goal state
         self.solution_path = []
-        # Heuristics type
-        #self.h_type = 1 # MIN number of tiles on wrong positions.
-        self.h_type = 2 # MIN sum of manhattan distances from goal posisitions.
+        # Heuristics object
         self.heuristics = PuzzleHeuristics(self.goal_state)
 
-
-
-    def _solve_given_puzzle(self, start_state):
+    def _solve_given_puzzle(self, start_state, h_type):
+        """
+        Tries to solve a given puzzle with the selected heuristic.
+        Args:
+            start_state (Hash)
+            h_type (int):
+                1 ... MIN number of tiles on wrong positions.
+                2 ... MIN sum of manhattan distances from goal posisitions.
+        Returns:
+            boolean: Whether a solution from the start state has been found or not.
+        """
         # Reset solution path (start state -> goal state).
         self.solution_path = []
         # Add start state to the path.
         self.solution_path.append(start_state)
         current_state = self.solution_path[-1]
-        current_state['h_value'] = self.heuristics.calculate_value(self.h_type,current_state)
+        current_state['h_value'] = self.heuristics.calculate_value(h_type,current_state)
         # Search for a solution.
         while current_state['tiles'] != self.goal_state['tiles']:
             #print "======CUR STATE======"
             #self._show_state(current_state)
-            # Find possible moves against zero tile.
+            # Find possible moves towards zero tile.
             possible_moves = self._find_possible_moves(current_state)
             # For every move create a new state.
             new_states = self._create_states_from_moves(current_state, possible_moves)
             # Check if the states are valid.
             valid_states = self._get_valid_states(new_states)
             if not valid_states:
-                print('No solution found in %d moves.') % len(self.solution_path)
+                print('No solution found in %d moves (using h%d).') % (len(self.solution_path), h_type)
                 return False
             # Calculate heuristics value for every new state.
             for state in valid_states:
-                state['h_value'] = self.heuristics.calculate_value(self.h_type,state)
+                state['h_value'] = self.heuristics.calculate_value(h_type,state)
             # Choose state with the lowest heuristics value.
-            best_state = self._find_best_state(valid_states)
+            best_state = self._get_best_state(valid_states)
             self.solution_path.append(best_state)
             current_state = best_state
-            """
-            # Check if the best state has a lower or the same h value than the current state.
-            # If yes, another step in solution was found.
-            if best_state['h_value'] <= current_state['h_value']:
-                self.solution_path.append(best_state)
-                current_state = best_state
-            # If no, the puzzle has no solution - end the program.
-            else:
-                print('No solution found in %d moves.') % len(self.solution_path)
-                return False
-                #print(self.solution_path)
-                exit()
-            """
         # Goal state was reached
-        print('The goal state was reached in %d moves.') % len(self.solution_path)
+        print('The goal state was reached in %d moves (using h%d).') % (len(self.solution_path),h_type)
         #print(self.solution_path)
         return True
 
-    def solve_random_puzzle(self):
-        result = self._solve_given_puzzle(self._generate_start_state())
+    def solve_random_puzzle(self, h_type):
+        """
+        Solve a randomly generated puzzle (using given h type).
+        """
+        result = self._solve_given_puzzle(self._generate_start_state(), h_type)
         return result
 
-    def bulk_solve(self, number_of_puzzles):
+    def bulk_solve(self, number_of_puzzles, h_type):
+        """
+        Perform a simulation of solving many puzzles at once (using given h type).
+        """
         # Do simulation
         solved_n = 0
         for i in range(1,number_of_puzzles+1):
             print("ITERATION %d") % i
-            if self.solve_random_puzzle():
+            if self.solve_random_puzzle(h_type):
                 solved_n += 1
         # Show statistics
-        print('=====BULK RUN STATS=====')
+        print('=====h%s: BULK RUN STATS=====') % h_type
         print('Total puzzles: %d') % number_of_puzzles
         print('Total solved puzzles: %d') % solved_n
         effectivity = (float(solved_n)/number_of_puzzles)*100
         print('Percentual effectivity of the algorithm: '+str(effectivity)+' %')
-
 
     def _generate_start_state(self):
         """
@@ -170,27 +168,9 @@ class PuzzleWorld(object):
         # result
         return new_states
 
-    def _get_tile_name_by_coordinates(self, state, coordinates):
-        for t_name, xy in state['tiles'].iteritems():
-            if xy == coordinates:
-                return t_name
-
-
-    def _show_state(self, state):
-        print state
-
-    def _find_best_state(self, valid_states):
-        """
-        Select a state with the lowest h value.
-        If there are more states with same value, choose the one which will place a non-zero title on the right place.
-        """
-        if not valid_states:
-            exit(valid_states)
-        return min(valid_states, key=lambda x: x['h_value'])
-
     def _get_valid_states(self, new_states):
         """
-        Eliminate all already selected states (in solution path).
+        Eliminate all already visited states (in solution path).
         """
         valid_states = []
         for new_state in new_states:
@@ -203,4 +183,26 @@ class PuzzleWorld(object):
                 valid_states.append(new_state)
         # result
         return valid_states
+
+    def _get_best_state(self, valid_states):
+        """
+        Select a state with the lowest h value.
+        [Not implemented: If there are more states with same value, choose the one which will place a non-zero title on the right place.]
+        """
+        return min(valid_states, key=lambda x: x['h_value'])
+
+    # HELPER FUCNTIONS
+    def _get_tile_name_by_coordinates(self, state, coordinates):
+        """
+        Given x and y, return tile name from the given state.
+        """
+        for t_name, xy in state['tiles'].iteritems():
+            if xy == coordinates:
+                return t_name
+
+    def _show_state(self, state):
+        """
+        A nice matrix representation of the state could be shown, but it's difficlut :).
+        """
+        print(state)
 
