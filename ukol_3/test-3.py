@@ -10,3 +10,5 @@ cqw = ChessQueenWorld(file_paths)
 
 cqw.solve_random_board()
 
+#my = [15,27,37,48]
+#print my[0:3]
