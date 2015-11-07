@@ -16,12 +16,10 @@ class ChessQueenWorld(object):
         return self._solve_given_board(gen_state)
 
     def _solve_given_board(self, start_state):
-        self.heuristic.count_total_conflicts(start_state)
-
+        print self.heuristic.count_total_conflicts(start_state)
 
     def _move_queen(self, state, start_position, direction, number_of_steps):
         pass
-
 
     def _generate_start_state(self):
         state_a = [

@@ -5,27 +5,32 @@ class QueenHeuristic(object):
     def count_total_conflicts(self, state):
         """
         Count number of conflicts in the given state.
+        One conflict = two queens in conflict.
         """
-        return self._count_conflicts_for_queen(state, (7,7))
+        #print self._count_conflicts_for_queen(state,(3,3))
+        #exit()
         total_c = 0
         for i, row in enumerate(state):
-            for j, tile in enumerate(row):
-                if tile == 1:
-                   total_c += self._count_conflicts_for_queen(state, (i, j))
-        return total_c
+            for j, square in enumerate(row):
+                if square == 1:
+                    total_c += self._count_conflicts_for_queen(state,(i, j))
+        return total_c/2
 
     def _count_conflicts_for_queen(self, state, queen_pos):
-        print queen_pos
+        # Check if the given position contains a queen.
+        if state[queen_pos[0]][queen_pos[1]] == 0:
+            return False
+        #print queen_pos
         # Go up and down
         vertical_c = self._check_area_vertically(state, queen_pos)
         # Go left and right
         horizontal_c = self._check_area_horizontally(state, queen_pos)
-        # Go diagonally
-        diagonal_c = self._check_area_diagonally(state, queen_pos)
-        print diagonal_c
-        exit()
+        # Go diagonally L->R
+        diagonal_lr = self._check_area_diagonally_lr(state, queen_pos)
+        diagonal_rl = self._check_area_diagonally_rl(state, queen_pos)
         # result
-        total_count = vertical_c + horizontal_c + diagonal_c
+        #print vertical_c, horizontal_c, diagonal_lr, diagonal_rl
+        total_count = vertical_c + horizontal_c + diagonal_lr + diagonal_rl
         return total_count
 
     def _check_area_vertically(self, state, queen_pos):
@@ -48,10 +53,9 @@ class QueenHeuristic(object):
         # result
         return queens_count - 1
 
-    def _check_area_diagonally(self, state, queen_pos):
+    def _check_area_diagonally_lr(self, state, queen_pos):
         queens_count = 0
-        # Check L->R diagonal.
-        # Get border position from where to start search.
+        # Get border position from where to start the search.
         coord_dif = queen_pos[0] - queen_pos[1]
         if coord_dif == 0:
             start_pos = (0,0)
@@ -60,7 +64,6 @@ class QueenHeuristic(object):
         else:
             start_pos = (0, abs(coord_dif))
         # Search the line
-        print start_pos
         j = start_pos[1]
         for i, row in enumerate(state[start_pos[0]:8]):
             if j > 7:
@@ -69,8 +72,28 @@ class QueenHeuristic(object):
             if row[j] == 1:
                 queens_count += 1
             j += 1
-        # result
-        queens_count = 0
-        # Check R->L diagonal.
-
+        # result - minus the original queen
         return queens_count - 1
+
+    def _check_area_diagonally_rl(self, state, queen_pos):
+        queens_count = 0
+        # up
+        j = queen_pos[1]
+        for i in range(queen_pos[0],-1,-1):
+            if j > 7:
+                break
+            #print i,j,state[i][j]
+            if state[i][j] == 1:
+                queens_count += 1
+            j += 1
+        # bottom
+        j = queen_pos[1]
+        for i in range(queen_pos[0],8,1):
+            if j < 0:
+                break
+            #print i,j,state[i][j]
+            if state[i][j] == 1:
+                queens_count += 1
+            j -= 1
+        # result - minus the original queen
+        return queens_count - 2
