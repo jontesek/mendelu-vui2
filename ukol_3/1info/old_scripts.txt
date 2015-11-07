@@ -1,0 +1,66 @@
+def get_tile_coordinates_by_name(self, tile_name, state):
+        for t_name, xy in state.iteritems():
+            if tile_name == t_name:
+                return xy
+
+    def _find_best_state(self, new_states):
+        """
+        Select a state with the lowest h value.
+        If there are more states with same value, choose the one which will place a non-zero title on the right place.
+        """
+        return min(new_states, key=lambda x: x['h_value'])
+        """
+        min_h = float("inf")
+        # Get the lowest h value.
+        for state in new_states:
+            if state['h_value'] < min_h:
+                min_h = state['h_value']
+        # Remove states with a higher h value.
+        min_states = []
+        for state in new_states:
+            if state['h_value'] == min_h:
+                min_states.append(state)
+        # If there is only one state with the value, return the result.
+        #print min_states
+        if len(min_states) == 1:
+            return min_states[0]
+        # Otherwise search the states and if necessary, skip the zero tile.
+        for state in min_states:
+            if state['moved_tile'] == self.solution_path[-1]['tiles'][0]:
+                continue
+            else:
+                return state
+        """
+
+    def _get_valid_states(self, new_states):
+        """
+        Eliminate all already selected states (in solution path).
+        """
+        # The state cannot be the same as start state.
+        valid_states = []
+        for state in new_states:
+            if state['tiles'] != self.goal_state['tiles']:
+                valid_states.append(state)
+        # The state cannot be same as the state before parent state.
+        if len(self.solution_path) == 1:
+            return valid_states
+        valid_states_2 = []
+        for state in valid_states:
+            if state['tiles'] != self.solution_path[-2]['tiles']:
+                valid_states_2.append(state)
+        # result
+        return valid_states_2
+
+      """
+            # Check if the best state has a lower or the same h value than the current state.
+            # If yes, another step in solution was found.
+            if best_state['h_value'] <= current_state['h_value']:
+                self.solution_path.append(best_state)
+                current_state = best_state
+            # If no, the puzzle has no solution - end the program.
+            else:
+                print('No solution found in %d moves.') % len(self.solution_path)
+                return False
+                #print(self.solution_path)
+                exit()
+      """
