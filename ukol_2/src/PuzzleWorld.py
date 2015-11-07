@@ -1,3 +1,6 @@
+from Queue import LifoQueue
+import random
+
 from PuzzleHeuristics import PuzzleHeuristics
 
 
@@ -32,19 +35,25 @@ class PuzzleWorld(object):
         current_state['h_value'] = self.heuristics.calculate_value(self.h_type,current_state)
         # Search for a solution.
         while current_state['tiles'] != self.goal_state['tiles']:
-            print "======CUR STATE======"
-            self._show_state(current_state)
+            #print "======CUR STATE======"
+            #self._show_state(current_state)
             # Find possible moves against zero tile.
             possible_moves = self._find_possible_moves(current_state)
             # For every move create a new state.
             new_states = self._create_states_from_moves(current_state, possible_moves)
-            # Check if the states are possible.
+            # Check if the states are valid.
             valid_states = self._get_valid_states(new_states)
+            if not valid_states:
+                print('No solution found in %d moves.') % len(self.solution_path)
+                return False
             # Calculate heuristics value for every new state.
             for state in valid_states:
                 state['h_value'] = self.heuristics.calculate_value(self.h_type,state)
             # Choose state with the lowest heuristics value.
             best_state = self._find_best_state(valid_states)
+            self.solution_path.append(best_state)
+            current_state = best_state
+            """
             # Check if the best state has a lower or the same h value than the current state.
             # If yes, another step in solution was found.
             if best_state['h_value'] <= current_state['h_value']:
@@ -53,14 +62,33 @@ class PuzzleWorld(object):
             # If no, the puzzle has no solution - end the program.
             else:
                 print('No solution found in %d moves.') % len(self.solution_path)
+                return False
                 #print(self.solution_path)
                 exit()
+            """
         # Goal state was reached
         print('The goal state was reached in %d moves.') % len(self.solution_path)
-        print(self.solution_path)
+        #print(self.solution_path)
+        return True
 
-    def start_solving_puzzle(self):
+    def solve_random_puzzle(self):
         result = self._solve_given_puzzle(self._generate_start_state())
+        return result
+
+    def bulk_solve(self, number_of_puzzles):
+        # Do simulation
+        solved_n = 0
+        for i in range(1,number_of_puzzles+1):
+            print("ITERATION %d") % i
+            if self.solve_random_puzzle():
+                solved_n += 1
+        # Show statistics
+        print('=====BULK RUN STATS=====')
+        print('Total puzzles: %d') % number_of_puzzles
+        print('Total solved puzzles: %d') % solved_n
+        effectivity = (float(solved_n)/number_of_puzzles)*100
+        print('Percentual effectivity of the algorithm: '+str(effectivity)+' %')
+
 
     def _generate_start_state(self):
         """
@@ -75,8 +103,20 @@ class PuzzleWorld(object):
             'moved_tile': None,
             'h_value': None
         }
-
-        return state_a
+        random_tiles = {i: None for i in range(0,9)}
+        positions_used = []
+        i = 0
+        while i < 9:
+            r_pos = (random.randint(1,3), random.randint(1,3))
+            if r_pos not in positions_used:
+                positions_used.append(r_pos)
+                random_tiles[i] = r_pos
+                i += 1
+        r_state = {
+            'tiles': random_tiles, 'moved_tile': None, 'h_value': None
+        }
+        print random_tiles
+        return r_state
 
     def _find_possible_moves(self, current_state):
         """
@@ -139,25 +179,28 @@ class PuzzleWorld(object):
     def _show_state(self, state):
         print state
 
-    def _find_best_state(self, new_states):
+    def _find_best_state(self, valid_states):
         """
         Select a state with the lowest h value.
         If there are more states with same value, choose the one which will place a non-zero title on the right place.
         """
-        return min(new_states, key=lambda x: x['h_value'])
+        if not valid_states:
+            exit(valid_states)
+        return min(valid_states, key=lambda x: x['h_value'])
 
     def _get_valid_states(self, new_states):
-        # The state cannot be the same as start state.
+        """
+        Eliminate all already selected states (in solution path).
+        """
         valid_states = []
-        for state in new_states:
-            if state['tiles'] != self.goal_state['tiles']:
-                valid_states.append(state)
-        # The state cannot be same as the state before parent state.
-        if len(self.solution_path) == 1:
-            return valid_states
-        valid_states_2 = []
-        for state in valid_states:
-            if state['tiles'] != self.solution_path[-2]['tiles']:
-                valid_states_2.append(state)
+        for new_state in new_states:
+            ok = True
+            for sel_state in self.solution_path:
+                if sel_state['tiles'] == new_state['tiles']:
+                    ok = False
+                    break
+            if ok:
+                valid_states.append(new_state)
         # result
-        return valid_states_2
+        return valid_states
+

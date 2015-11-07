@@ -1,5 +1,5 @@
 from src.PuzzleWorld import PuzzleWorld
 
 pw = PuzzleWorld()
-pw.start_solving_puzzle()
-
+#pw.solve_random_puzzle()
+pw.bulk_solve(1000)

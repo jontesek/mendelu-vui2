@@ -31,3 +31,22 @@ def get_tile_coordinates_by_name(self, tile_name, state):
             else:
                 return state
         """
+
+    def _get_valid_states(self, new_states):
+        """
+        Eliminate all already selected states (in solution path).
+        """
+        # The state cannot be the same as start state.
+        valid_states = []
+        for state in new_states:
+            if state['tiles'] != self.goal_state['tiles']:
+                valid_states.append(state)
+        # The state cannot be same as the state before parent state.
+        if len(self.solution_path) == 1:
+            return valid_states
+        valid_states_2 = []
+        for state in valid_states:
+            if state['tiles'] != self.solution_path[-2]['tiles']:
+                valid_states_2.append(state)
+        # result
+        return valid_states_2
