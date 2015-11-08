@@ -24,7 +24,7 @@ class PuzzleWorld(object):
         self.heuristics = PuzzleHeuristics(self.goal_state)
         self.statistics = PuzzleStatistics(self)
 
-    # MAIN PUBLIC methods
+    # PUBLIC main methods
     def solve_given_puzzle(self, start_state, h_type):
         """
         Tries to solve a given puzzle with the selected heuristic.
@@ -74,6 +74,20 @@ class PuzzleWorld(object):
         result = self.solve_given_puzzle(self.generate_start_state(), h_type)
         return result
 
+    # PUBLIC statistical methods
+    def bulk_solve(self, number_of_puzzles, h_type):
+        """
+        Perform a simulation of solving many puzzles at once (using given h type).
+        """
+        self.statistics.bulk_solve(number_of_puzzles, h_type)
+
+    def bulk_solve_compare(self, number_of_puzzles):
+        """
+        Compare both heuristics by performing a simulation.
+        """
+        self.statistics.solve_and_compare_bulk(number_of_puzzles)
+
+    # PUBLIC working methods
     def generate_start_state(self):
         """
         Generates a random start state.
@@ -177,19 +191,6 @@ class PuzzleWorld(object):
         [Not implemented: If there are more states with same value, choose the one which will place a non-zero title on the right place.]
         """
         return min(valid_states, key=lambda x: x['h_value'])
-
-    # PUBLIC statistic methods
-    def bulk_solve(self, number_of_puzzles, h_type):
-        """
-        Perform a simulation of solving many puzzles at once (using given h type).
-        """
-        self.statistics.bulk_solve(number_of_puzzles, h_type)
-
-    def bulk_solve_compare(self, number_of_puzzles):
-        """
-        Compare both heuristics by performing a simulation.
-        """
-        self.statistics.solve_and_compare_bulk(number_of_puzzles)
 
     # HELPER functions
     def _get_tile_name_by_coordinates(self, state, coordinates):

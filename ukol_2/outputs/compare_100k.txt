@@ -1,0 +1,10 @@
+=======BULK COMPARE=======
+Total execution time: 912.343 s
+===H1===
+Solved percentage: 905/100000 = 0.91 %
+Average efficiency: 82590/905 = 91 moves
+Minimal number of moves to a solution: 2
+===H2===
+Solved percentage: 10886/100000 = 10.89 %
+Average efficiency: 677773/10886 = 62 moves
+Minimal number of moves to a solution: 2

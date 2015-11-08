@@ -1,0 +1,54 @@
+=======BULK COMPARE=======
+Total execution time: 9.123 s
+===H1===
+Solved percentage: 13/1000 = 1.3 %
+Average efficiency: 1180/13 = 90 moves
+Minimal number of moves to a solution: 9
+===H2===
+Solved percentage: 97/1000 = 9.7 %
+Average efficiency: 6099/97 = 62 moves
+Minimal number of moves to a solution: 9
+
+=======BULK COMPARE=======
+Total execution time: 9.25 s
+===H1===
+Solved percentage: 5/1000 = 0.5 %
+Average efficiency: 483/5 = 96 moves
+Minimal number of moves to a solution: 11
+===H2===
+Solved percentage: 104/1000 = 10.4 %
+Average efficiency: 6585/104 = 63 moves
+Minimal number of moves to a solution: 13
+
+=======BULK COMPARE=======
+Total execution time: 9.495 s
+===H1===
+Solved percentage: 9/1000 = 0.9 %
+Average efficiency: 720/9 = 80 moves
+Minimal number of moves to a solution: 18
+===H2===
+Solved percentage: 99/1000 = 9.9 %
+Average efficiency: 6738/99 = 68 moves
+Minimal number of moves to a solution: 10
+
+=======BULK COMPARE=======
+Total execution time: 8.805 s
+===H1===
+Solved percentage: 7/1000 = 0.7 %
+Average efficiency: 534/7 = 76 moves
+Minimal number of moves to a solution: 15
+===H2===
+Solved percentage: 97/1000 = 9.7 %
+Average efficiency: 6101/97 = 62 moves
+Minimal number of moves to a solution: 17
+
+=======BULK COMPARE=======
+Total execution time: 9.376 s
+===H1===
+Solved percentage: 10/1000 = 1.0 %
+Average efficiency: 617/10 = 61 moves
+Minimal number of moves to a solution: 6
+===H2===
+Solved percentage: 123/1000 = 12.3 %
+Average efficiency: 7767/123 = 63 moves
+Minimal number of moves to a solution: 6

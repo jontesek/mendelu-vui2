@@ -1,3 +1,4 @@
+import timeit
 
 
 class PuzzleStatistics(object):
@@ -9,23 +10,31 @@ class PuzzleStatistics(object):
         """
         Perform a simulation of solving many puzzles at once (using given h type).
         """
+        # Prepare timer
+        timer_start = timeit.default_timer()
         # Do simulation
         solved_n = 0
         for i in range(1,number_of_puzzles+1):
             print("ITERATION %d") % i
             if self.world.solve_random_puzzle(h_type):
                 solved_n += 1
+        # Count execution time
+        timer_stop = timeit.default_timer()
+        timer_duration = round(timer_stop - timer_start,3)
         # Show statistics
         print('=====h%s: BULK RUN STATS=====') % h_type
+        print('Total execution time: ' + str(timer_duration) + ' s')
         print('Total puzzles: %d') % number_of_puzzles
         print('Total solved puzzles: %d') % solved_n
         effectivity = (float(solved_n)/number_of_puzzles)*100
-        print('Percentual effectivity of the algorithm: '+str(effectivity)+' %')
+        print('Percentual efficiency of the algorithm: '+str(effectivity)+' %')
 
     def solve_and_compare_bulk(self, number_of_puzzles):
         """
         Compare both heuristics by performing a simulation.
         """
+        # Prepare timer
+        timer_start = timeit.default_timer()
         # Prepare variables
         solved_data = []
         min_moves = []
@@ -64,17 +73,21 @@ class PuzzleStatistics(object):
                 solved_data[1][1] += sol_path_len
                 if sol_path_len < min_moves[1]:
                     min_moves[1] = sol_path_len
+        # Count execution time
+        timer_stop = timeit.default_timer()
+        timer_duration = round(timer_stop - timer_start,3)
         # Calculate statistics
         print('=======BULK COMPARE=======')
+        print('Total execution time: ' + str(timer_duration) + ' s')
         # h1
         print('===H1===')
         solved_percentage = round((solved_data[0][0]/number_of_puzzles) * 100, 2)
         print('Solved percentage: %d/%d = ' + str(solved_percentage) + ' %%') % (solved_data[0][0], number_of_puzzles)
         if int(solved_data[0][0]) == 0:
-            avg_effectivity = 0
+            avg_efficiency = 0
         else:
-            avg_effectivity = int(solved_data[0][1]/solved_data[0][0])
-        print('Average effectivity: %d/%d = ' + str(avg_effectivity) + ' moves') % (solved_data[0][1], solved_data[0][0])
+            avg_efficiency = int(solved_data[0][1]/solved_data[0][0])
+        print('Average efficiency: %d/%d = ' + str(avg_efficiency) + ' moves') % (solved_data[0][1], solved_data[0][0])
         if min_moves[0] == float('inf'):
             min_moves[0] = 0
         print('Minimal number of moves to a solution: %d') % min_moves[0]
@@ -83,10 +96,10 @@ class PuzzleStatistics(object):
         solved_percentage = round((solved_data[1][0]/number_of_puzzles) * 100, 2)
         print('Solved percentage: %d/%d = ' + str(solved_percentage) + ' %%') % (solved_data[1][0], number_of_puzzles)
         if int(solved_data[1][0]) == 0:
-            avg_effectivity = 0
+            avg_efficiency = 0
         else:
-            avg_effectivity = int(solved_data[1][1]/solved_data[1][0])
-        print('Average effectivity: %d/%d = ' + str(avg_effectivity) + ' moves') % (solved_data[1][1], solved_data[1][0])
+            avg_efficiency = int(solved_data[1][1]/solved_data[1][0])
+        print('Average efficiency: %d/%d = ' + str(avg_efficiency) + ' moves') % (solved_data[1][1], solved_data[1][0])
         if min_moves[1] == float('inf'):
             min_moves[1] = 0
         print('Minimal number of moves to a solution: %d') % min_moves[1]
