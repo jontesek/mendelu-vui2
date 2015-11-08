@@ -17,8 +17,6 @@ class PuzzleWorld(object):
             'moved_tile': None,
             'h_value': 0
         }
-        # Path from start state to goal state
-        self.solution_path = []
         # Heuristics object
         self.heuristics = PuzzleHeuristics(self.goal_state)
 
@@ -34,10 +32,10 @@ class PuzzleWorld(object):
             boolean: Whether a solution from the start state has been found or not.
         """
         # Reset solution path (start state -> goal state).
-        self.solution_path = []
+        solution_path = []
         # Add start state to the path.
-        self.solution_path.append(start_state)
-        current_state = self.solution_path[-1]
+        solution_path.append(start_state)
+        current_state = solution_path[0]
         current_state['h_value'] = self.heuristics.calculate_value(h_type,current_state)
         # Search for a solution.
         while current_state['tiles'] != self.goal_state['tiles']:
@@ -48,21 +46,21 @@ class PuzzleWorld(object):
             # For every move create a new state.
             new_states = self._create_states_from_moves(current_state, possible_moves)
             # Check if the states are valid.
-            valid_states = self._get_valid_states(new_states)
+            valid_states = self._get_valid_states(new_states, solution_path)
             if not valid_states:
-                print('No solution found in %d moves (using h%d).') % (len(self.solution_path), h_type)
+                print('No solution found in %d moves (using h%d).') % (len(solution_path)-1, h_type)
                 return False
             # Calculate heuristics value for every new state.
             for state in valid_states:
                 state['h_value'] = self.heuristics.calculate_value(h_type,state)
             # Choose state with the lowest heuristics value.
             best_state = self._get_best_state(valid_states)
-            self.solution_path.append(best_state)
+            solution_path.append(best_state)
             current_state = best_state
         # Goal state was reached
-        print('The goal state was reached in %d moves (using h%d).') % (len(self.solution_path)-1,h_type)
-        #print(self.solution_path)
-        return True
+        print('The goal state was reached in %d moves (using h%d).') % (len(solution_path)-1,h_type)
+        #print(solution_path)
+        return solution_path
 
     def solve_random_puzzle(self, h_type):
         """
@@ -110,12 +108,14 @@ class PuzzleWorld(object):
         for i in range(1,number_of_puzzles+1):
             print("ITERATION %d") % i
             puzzle = self._generate_start_state();
-            if self.solve_given_puzzle(puzzle, 1):
+            solution_path = self.solve_given_puzzle(puzzle, 1)
+            if solution_path:
                 solved_data[0][0] += 1
-                solved_data[0][1] += len(self.solution_path)-1
-            if self.solve_given_puzzle(puzzle, 2):
+                solved_data[0][1] += len(solution_path)-1
+            solution_path = self.solve_given_puzzle(puzzle, 2)
+            if solution_path:
                 solved_data[1][0] += 1
-                solved_data[1][1] += len(self.solution_path)-1
+                solved_data[1][1] += len(solution_path)-1
         # Calculate statistics
         print('=====BULK COMPARE=====')
         # h1
@@ -218,14 +218,14 @@ class PuzzleWorld(object):
         # result
         return new_states
 
-    def _get_valid_states(self, new_states):
+    def _get_valid_states(self, new_states, solution_path):
         """
         Eliminate all already visited states (in solution path).
         """
         valid_states = []
         for new_state in new_states:
             ok = True
-            for sel_state in self.solution_path:
+            for sel_state in solution_path:
                 if sel_state['tiles'] == new_state['tiles']:
                     ok = False
                     break

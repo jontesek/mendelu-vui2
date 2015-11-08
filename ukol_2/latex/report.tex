@@ -17,10 +17,11 @@
 The goal of the work is to implement a solution to the ''8-puzzle'' using two assigned heuristics. There is a board 3x3 with 8 tiles inside (and one blank square). The goal is to rearrange all tiles so they are in order. 
 
 \section{Solution design}
-The 8-puzzle can by solved by creating and searching a state space (tree). But another way exists -- to use a heuristic. This way, the optimal (or even any) solution may not be found, but the process is much faster. Following two heuristics are considered: h1 -- min. wrong placings, h2 -- min. Manhattan distance.
+The 8-puzzle can by solved by creating and searching a state space. It has size of 9! = 362,880 states. Only half of the states are reachable from any given (start) state -- are solvable (Latombe, 2011). The number is quite large and for 15-puzzle (16! possible configurations) it's much higher. 
+
+But another way of solving the puzzle exists -- to use a heuristic. This way, the optimal (or even any) solution may not be found, but the process is much faster. Following two heuristics are used: h1 -- min. wrong placings, h2 -- min. Manhattan distance.
 
 A board state is represented by a hash of <tile name> => <tile x,y coordinates>, ''moved tile'' field and `'h\_value'' field. Tiles are named 1--8, a blank square is named 0 and behaves like a regular tile. 
-
 
 \section{Implementation}
 The program was implemented in Python. A state is saved in a variable with the following structure (example for goal state).
@@ -35,14 +36,15 @@ self.goal_state = {
             'h_value': 0
 }
 \end{lstlisting}
-All visited states are saved in ''solution\_path'' list (in order). There is a main class \texttt{PuzzleWorld} with 3 public methods: 
+All visited states are saved in ''solution\_path'' list (in order). There is a main class \texttt{PuzzleWorld} with 4 public methods: 
 \begin{itemize}
 \item \verb|solve_given_puzzle(start_state, h_type)|
 \item \verb|solve_random_puzzle(h_type)|
 \item \verb|bulk_solve(number_of_puzzles, h_type)|
+\item \verb|bulk_solve_compare(number_of_puzzles)|
 \end{itemize}
 
-The main method \verb|solve_given_puzzle| accepts a start state and tries to find a solution using given heuristic. 
+The main method \verb|solve_given_puzzle| accepts a start state and tries to find a solution using given heuristic. The general algorithm:
 \begin{enumerate}
 \item Reset solution path.
 \item Insert a start state into solution path.
@@ -52,30 +54,32 @@ The main method \verb|solve_given_puzzle| accepts a start state and tries to fin
            \item For every move create a new state.
            \item Check if the states are valid -- so far unvisited (not present in solution path). If there are no valid states, a solution cannot be found -- a message of failure is displayed and the program ends.
            \item Calculate heuristic value for every new valid state.
-           \item Choose a state with the lowest heuristic value -- insert it into solution path and mark it as current.
+           \item Choose a state with the lowest heuristic value, insert it into solution path and mark it as current.
+           \item Return solution path.
 	\end{enumerate}
 \end{enumerate}
 
-If the goal state was reached, a message of success and number of performed moves (length of \texttt{solution\_path - 1}) are displayed. 
+If the goal state was reached, a message of success and number of performed moves (length of \texttt{solution\_path} - 1) are displayed. 
 
 The class \texttt{PuzzleHeuristics} implements the calculation of heuristics:
 \begin{enumerate}
 \item Hamming distance -- number of tiles out of place.
-\item Manhattan distance -- the sum of minimum number of steps (vertical or horizontal) to move every tile in its goal position.
+\item Manhattan distance -- the sum of minimum number of steps (vertical and horizontal) to move every tile in its goal position.
 \end{enumerate}
 For both heuristics we choose the minimal value. 
 
 \section{Results}
 The program can be run by typing the following command into the operating system's terminal (Python 2.7 has to be installed on the system): \\ 
 \verb|python run-2.py| \\
-What the program should do must be stated in the run-2.py source code (there are no parameters).
+What the program should do must be stated in the run-2.py source code (the script has no parameters).
 
 \subsection{Hamming distance}
 
 
+
 \section{References}
 
-FRANCI, R. Jealous Husbands Crossing the River: A Problem from Alcuin to Tartaglia, \textit{From China to Paris: 2000 Years Transmission of Mathematical Ideas}, edited by Yvonne Dold-Samplonius, Joseph W. Dauben, Menso Folkerts, and Benno van Dalen, Stuttgart: Franz Steiner Verlag, 2002, pp. 289–306. ISBN 3-515-08223-9.
+Latombe, J.C. Search problems. \textit{Stanford AI Lab} [online]. 2011 [accessed 8.11.2015]. Available at: \url{http://ai.stanford.edu/~latombe/cs121/2011/slides/B-search-problems.ppt}
 
 
 \end{document}  %End of document.
