@@ -1,4 +1,3 @@
-C:\Python27\python.exe C:/Users/Jontes/Documents/programovani/PyCharmProjects/VUI2/ukol_2/run-2.py
 ITERATION 1
 {0: (1, 2), 1: (1, 1), 2: (2, 1), 3: (3, 1), 4: (2, 3), 5: (2, 2), 6: (3, 2), 7: (1, 3), 8: (3, 3)}
 No solution found in 53 moves (using h1).
@@ -304,5 +303,3 @@ Total execution time: 0.371 s
 Total puzzles: 100
 Total solved puzzles: 2
 Percentual efficiency of the algorithm: 2.0 %
-
-Process finished with exit code 0
