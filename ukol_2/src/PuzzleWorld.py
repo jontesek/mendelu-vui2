@@ -1,12 +1,15 @@
-from Queue import LifoQueue
 import random
 
 from PuzzleHeuristics import PuzzleHeuristics
+from PuzzleStatistics import PuzzleStatistics
 
 
 class PuzzleWorld(object):
 
     def __init__(self):
+        """
+        Defines a goal state and initializes basic objects (heuristics, statistics).
+        """
         # State representation: tile value => (x,y)
         self.goal_state = {
             'tiles': {
@@ -17,9 +20,11 @@ class PuzzleWorld(object):
             'moved_tile': None,
             'h_value': 0
         }
-        # Heuristics object
+        # Basic objects
         self.heuristics = PuzzleHeuristics(self.goal_state)
+        self.statistics = PuzzleStatistics(self)
 
+    # MAIN PUBLIC methods
     def solve_given_puzzle(self, start_state, h_type):
         """
         Tries to solve a given puzzle with the selected heuristic.
@@ -66,79 +71,10 @@ class PuzzleWorld(object):
         """
         Solve a randomly generated puzzle (using given h type).
         """
-        result = self.solve_given_puzzle(self._generate_start_state(), h_type)
+        result = self.solve_given_puzzle(self.generate_start_state(), h_type)
         return result
 
-    def bulk_solve(self, number_of_puzzles, h_type):
-        """
-        Perform a simulation of solving many puzzles at once (using given h type).
-        """
-        # Do simulation
-        solved_n = 0
-        for i in range(1,number_of_puzzles+1):
-            print("ITERATION %d") % i
-            if self.solve_random_puzzle(h_type):
-                solved_n += 1
-        # Show statistics
-        print('=====h%s: BULK RUN STATS=====') % h_type
-        print('Total puzzles: %d') % number_of_puzzles
-        print('Total solved puzzles: %d') % solved_n
-        effectivity = (float(solved_n)/number_of_puzzles)*100
-        print('Percentual effectivity of the algorithm: '+str(effectivity)+' %')
-
-    def bulk_solve_compare(self, number_of_puzzles):
-        """
-        Compare both heuristics by performing a simulation.
-        """
-        # Prepare variables
-        solved_data = []
-        # h1
-        solved_data.append([])        # index 0
-        solved_data[0].append([])
-        solved_data[0].append([])
-        solved_data[0][0] = 0.0       # Solved puzzles count
-        solved_data[0][1] = 0.0       # Sum of number of moves count
-        # h2
-        solved_data.append([])        # index 1
-        solved_data[1].append([])
-        solved_data[1].append([])
-        solved_data[1][0] = 0.0       # Solved puzzles count
-        solved_data[1][1] = 0.0       # Sum of number of moves count
-        # Do a simulation
-        for i in range(1,number_of_puzzles+1):
-            print("ITERATION %d") % i
-            puzzle = self._generate_start_state();
-            solution_path = self.solve_given_puzzle(puzzle, 1)
-            if solution_path:
-                solved_data[0][0] += 1
-                solved_data[0][1] += len(solution_path)-1
-            solution_path = self.solve_given_puzzle(puzzle, 2)
-            if solution_path:
-                solved_data[1][0] += 1
-                solved_data[1][1] += len(solution_path)-1
-        # Calculate statistics
-        print('=====BULK COMPARE=====')
-        # h1
-        print('===H1===')
-        solved_percentage = round((solved_data[0][0]/number_of_puzzles) * 100, 2)
-        print('Solved percentage: %d/%d = ' + str(solved_percentage) + ' %%') % (solved_data[0][0], number_of_puzzles)
-        if int(solved_data[0][0]) == 0:
-            avg_effectivity = 0
-        else:
-            avg_effectivity = int(solved_data[0][1]/solved_data[0][0])
-        print('Average effectivity: %d/%d = ' + str(avg_effectivity) + ' moves') % (solved_data[0][1], solved_data[0][0])
-        # h2
-        print('===H2===')
-        solved_percentage = round((solved_data[1][0]/number_of_puzzles) * 100, 2)
-        print('Solved percentage: %d/%d = ' + str(solved_percentage) + ' %%') % (solved_data[1][0], number_of_puzzles)
-        if int(solved_data[1][0]) == 0:
-            avg_effectivity = 0
-        else:
-            avg_effectivity = int(solved_data[1][1]/solved_data[1][0])
-        print('Average effectivity: %d/%d = ' + str(avg_effectivity) + ' moves') % (solved_data[1][1], solved_data[1][0])
-
-
-    def _generate_start_state(self):
+    def generate_start_state(self):
         """
         Generates a random start state.
         """
@@ -166,6 +102,7 @@ class PuzzleWorld(object):
         print random_tiles
         return r_state
 
+    # PRIVATE working methods
     def _find_possible_moves(self, current_state):
         """
         Returns tiles with which the zero tile can change its position.
@@ -241,7 +178,20 @@ class PuzzleWorld(object):
         """
         return min(valid_states, key=lambda x: x['h_value'])
 
-    # HELPER FUCNTIONS
+    # PUBLIC statistic methods
+    def bulk_solve(self, number_of_puzzles, h_type):
+        """
+        Perform a simulation of solving many puzzles at once (using given h type).
+        """
+        self.statistics.bulk_solve(number_of_puzzles, h_type)
+
+    def bulk_solve_compare(self, number_of_puzzles):
+        """
+        Compare both heuristics by performing a simulation.
+        """
+        self.statistics.solve_and_compare_bulk(number_of_puzzles)
+
+    # HELPER functions
     def _get_tile_name_by_coordinates(self, state, coordinates):
         """
         Given x and y, return tile name from the given state.

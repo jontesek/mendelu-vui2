@@ -17,7 +17,7 @@
 The goal of the work is to implement a solution to the ''8-puzzle'' using two assigned heuristics. There is a board 3x3 with 8 tiles inside (and one blank square). The goal is to rearrange all tiles so they are in order. 
 
 \section{Solution design}
-The 8-puzzle can by solved by creating and searching a state space. It has size of 9! = 362,880 states. Only half of the states are reachable from any given (start) state -- are solvable (Latombe, 2011). The number is quite large and for 15-puzzle (16! possible configurations) it's much higher. 
+The 8-puzzle can by solved by creating and searching a state space, which has a size of 9! = 362,880 states. Only half of the states are reachable from any given (start) state -- are solvable (Latombe, 2011). The number is quite large and for 15-puzzle (16! possible configurations) it's much higher. 
 
 But another way of solving the puzzle exists -- to use a heuristic. This way, the optimal (or even any) solution may not be found, but the process is much faster. Following two heuristics are used: h1 -- min. wrong placings, h2 -- min. Manhattan distance.
 
@@ -36,7 +36,7 @@ self.goal_state = {
             'h_value': 0
 }
 \end{lstlisting}
-All visited states are saved in ''solution\_path'' list (in order). There is a main class \texttt{PuzzleWorld} with 4 public methods: 
+All visited states are saved in ''solution\_path'' list (in order). There is a main class \textbf{PuzzleWorld} with 4 public methods: 
 \begin{itemize}
 \item \verb|solve_given_puzzle(start_state, h_type)|
 \item \verb|solve_random_puzzle(h_type)|
@@ -61,12 +61,14 @@ The main method \verb|solve_given_puzzle| accepts a start state and tries to fin
 
 If the goal state was reached, a message of success and number of performed moves (length of \texttt{solution\_path} - 1) are displayed. 
 
-The class \texttt{PuzzleHeuristics} implements the calculation of heuristics:
+Class \textbf{PuzzleHeuristics} implements the calculation of heuristics:
 \begin{enumerate}
 \item Hamming distance -- number of tiles out of place.
 \item Manhattan distance -- the sum of minimum number of steps (vertical and horizontal) to move every tile in its goal position.
 \end{enumerate}
 For both heuristics we choose the minimal value. 
+
+Class \textbf{PuzzleStatistics} is used for performing and evaluating simulation. Method \texttt{bulk\_solve} solves given number of randomly generated puzzles by using given heuristic. Method \verb|bulk_solve_and_compare| does the same but every puzzle is solved by both heuristics and data about solutions are stored and later displayed. 
 
 \section{Results}
 The program can be run by typing the following command into the operating system's terminal (Python 2.7 has to be installed on the system): \\ 
