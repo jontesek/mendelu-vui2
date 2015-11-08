@@ -1,5 +1,6 @@
 from QueenHeuristic import QueenHeuristic
 
+
 class ChessQueenWorld(object):
 
     def __init__(self, file_paths):
@@ -16,7 +17,12 @@ class ChessQueenWorld(object):
         return self._solve_given_board(gen_state)
 
     def _solve_given_board(self, start_state):
-        print self.heuristic.count_total_conflicts(start_state)
+        #print self.heuristic.count_total_conflicts(start_state)
+        current_state = start_state
+        self.solution_path.append(current_state)
+        # Repeat until there are no conflicts.
+        while self.heuristic.count_total_conflicts(current_state) > 0:
+            pass
 
     def _move_queen(self, state, start_position, direction, number_of_steps):
         pass
