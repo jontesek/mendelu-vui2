@@ -1,0 +1,1 @@
+#conf_count = self.heuristic.count_total_conflicts(current_state)

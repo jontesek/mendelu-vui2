@@ -1,11 +1,52 @@
+import copy
+import random
 
 
 class QueenHeuristic(object):
 
+    def choose_min_conflict_positions(self, original_state):
+        column_state = original_state
+        # For every column
+        for j in range(0,8):
+            print ('====col. %s====') % j
+            # Get current position of the queen in a column.
+            queen_i = self._get_queen_pos_in_col(column_state,j)
+            # Get current conflict count.
+            current_cc = self.count_total_conflicts(column_state)
+            # Try to place a queen in every row.
+            queen_positions = {}
+            for i in range(0,8):
+                row_state = copy.deepcopy(column_state)
+                # Move the current queen to this place and check conflicts count.
+                if row_state[i][j] == 0:
+                    row_state[i][j] = 1
+                    row_state[queen_i][j] = 0
+                    #self._show_board(row_state)
+                    queen_positions[i] = self.count_total_conflicts(row_state)
+            # Choose position with minimal conflicts count.
+            min_cc = min(queen_positions.values())
+            min_rows = [row_n for row_n, cc in queen_positions.iteritems() if cc == min_cc]
+            new_queen_i = random.choice(min_rows)
+            # Check conflict count
+            if min_cc > current_cc:
+                print('skip')
+                continue    # skip the column
+            # Edit the current state
+            column_state[new_queen_i][j] = 1
+            column_state[queen_i][j] = 0
+            #self._show_board(column_state)
+        # return last state
+        return column_state
+
+    def _get_queen_pos_in_col(self, state, col_n):
+        for i in range(0,8):
+            if state[i][col_n] == 1:
+                return i
+
     def count_total_conflicts(self, state):
         """
         Count number of conflicts in the given state.
-        One conflict = two queens in conflict.
+        One conflict = two queens in a conflict.
         """
         #print self._count_conflicts_for_queen(state,(3,3))
         #exit()
@@ -97,3 +138,8 @@ class QueenHeuristic(object):
             j -= 1
         # result - minus the original queen
         return queens_count - 2
+
+    def _show_board(self, state):
+        print('==============')
+        for row in state:
+            print row

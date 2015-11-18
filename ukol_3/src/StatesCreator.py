@@ -26,9 +26,22 @@ class StatesCreator(object):
         ]
         return state
 
-    def get_sample_start_state(self, number):
+    def get_sample_start_state(self, num):
+        # lecture example 1
+        if num == 0:
+            state = [
+                [0,0,0,0,1,0,0,0],
+                [1,0,0,0,0,0,0,0],
+                [0,0,0,0,0,1,0,0],
+                [0,0,0,1,0,0,0,0],
+                [0,1,0,0,0,0,0,0],
+                [0,0,0,0,0,0,1,0],
+                [0,0,1,0,0,0,0,0],
+                [0,0,0,0,0,0,0,1],
+            ]
+            conflicts_n = 1
         # lecture example 2
-        if number == 1:
+        elif num == 1:
             state = [
                 [1,0,0,0,0,0,0,0],
                 [0,1,0,0,0,0,0,0],
@@ -41,7 +54,7 @@ class StatesCreator(object):
             ]
             conflicts_n = 28
         # https://thewalnut.io/app/release/14/#time=9
-        elif number == 2:
+        elif num == 2:
             state = [
                 [0,0,0,0,0,1,0,0],
                 [0,0,0,1,0,0,0,0],
@@ -54,7 +67,7 @@ class StatesCreator(object):
             ]
             conflicts_n = 1
         # http://www.aiai.ed.ac.uk/~gwickler/eightqueens.html
-        elif number == 3:
+        elif num == 3:
             state = [
                 [1,0,0,0,0,0,0,0],
                 [0,0,0,0,1,0,0,0],
@@ -119,6 +132,18 @@ class StatesCreator(object):
                 [0,0,0,0,0,0,0,1],
                 [0,0,0,0,0,1,0,0],
                 [1,0,0,0,0,0,0,0],
+            ]
+            conflicts_n = 3
+        elif number == 2:
+            state = [
+                [1, 0, 0, 0, 1, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 1, 0, 0],
+                [0, 0, 0, 1, 0, 0, 0, 0],
+                [0, 1, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 1, 0],
+                [0, 0, 1, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 1]
             ]
             conflicts_n = 3
 
