@@ -32,19 +32,22 @@ class ChessQueenWorld(object):
         # Prepare variables
         solution_path = []
         current_state = start_state
+        conf_count = self.heuristic.count_total_conflicts(current_state)
         solution_path.append(current_state)
         # Repeat until there are no conflicts.
         iter_n = 0
-        while self.heuristic.count_total_conflicts(current_state) > 0:
+        while conf_count > 0:
             iter_n += 1
             print ('========iter. %d========') % iter_n
-            # Get a new state.
-            current_state = self.heuristic.choose_min_conflict_positions(current_state)
+            # Create a new state from current state.
+            new_state = self.heuristic.choose_min_conflict_positions(current_state)
             # Check if the new state is alredy in solution path.
-            if current_state in solution_path:
-                continue    # If yes, re-run the method.
-            # If not, add it to solution path.
-            solution_path.append(current_state)
+            if new_state in solution_path:
+                continue # If yes, re-run the method.
+            # If not, it's part of solution.
+            conf_count = self.heuristic.count_total_conflicts(new_state)
+            solution_path.append(new_state)
+            current_state = new_state
         # Show solution
         return solution_path
 

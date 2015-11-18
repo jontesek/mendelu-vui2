@@ -5,7 +5,7 @@ import random
 class QueenHeuristic(object):
 
     def choose_min_conflict_positions(self, original_state):
-        column_state = original_state
+        column_state = copy.deepcopy(original_state)
         # For every column
         for j in range(0,8):
             print ('====col. %s====') % j
