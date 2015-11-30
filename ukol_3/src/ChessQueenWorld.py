@@ -14,32 +14,9 @@ class ChessQueenWorld(object):
         # Constants
         self.max_iter_count = 500
 
-    def bulk_solve(self, boards_n):
-        # Prepare variables for statistics
-        steps_sum = 0.0
-        solved_n = 0
-        unsolved_boards = []
-        # Generate and solve some boards
-        for i in range(0, boards_n):
-            print('=====Board n. %d=====') % boards_n
-            (sol_path, start_state) = self.solve_random_board()
-            self.heuristic.show_board(start_state)
-            if sol_path:
-                solved_n += 1
-                steps_sum += len(sol_path)
-            else:
-                unsolved_boards.append(start_state)
-        # Show statistics
-        avg_steps_c = steps_sum / boards_n
-        percent_solved = (float(solved_n) / boards_n) * 100
-        print('Number of generated boards: %d') % boards_n
-        print('Number of solved boards: %d ... ' + str(percent_solved) + ' %%') % solved_n
-        print('Average number of steps for solution: ' + str(avg_steps_c))
-
-
     def solve_random_board(self):
         gen_state = self.states_creator.generate_random_start_state()
-        #self.heuristic.show_board(gen_state)
+        self._show_board(gen_state)
         sol_path = self._solve_given_board(gen_state)
         if sol_path:
             solution = sol_path
@@ -72,7 +49,7 @@ class ChessQueenWorld(object):
             if iter_n > self.max_iter_count:
                 return False
             iter_n += 1
-            print ('========iter. %d========') % iter_n
+            #print ('========iter. %d========') % iter_n
             # Create a new state from current state.
             new_state = self.heuristic.choose_min_conflict_positions(current_state)
             # Check if the new state is alredy in solution path.
@@ -88,3 +65,53 @@ class ChessQueenWorld(object):
     def _show_board(self, state):
         for row in state:
             print row
+
+    def bulk_solve(self, boards_n):
+        # Prepare variables for statistics
+        steps_sum = 0.0
+        solved_n = 0
+        unsolved_boards = {}
+        solved_stats = {}   # key is number of conflicts in start board
+        # Generate and solve some boards
+        for i in range(1, boards_n+1):
+            print('=====Board n. %d=====') % i
+            # Get and solve random board.
+            (sol_path, start_state) = self.solve_random_board()
+            conf_count = self.heuristic.count_total_conflicts(start_state)
+            #self._show_board(start_state)
+            # Check if a solution was found.
+            if sol_path:
+                # Increment common values.
+                solved_n += 1
+                steps_sum += len(sol_path)-1
+                # Save values for initial conflicts count.
+                if conf_count in solved_stats:
+                    solved_stats[conf_count][0] += 1
+                    solved_stats[conf_count][1] += len(sol_path)-1
+                else:
+                    solved_stats[conf_count] = []
+                    solved_stats[conf_count].append(1.0)
+                    solved_stats[conf_count].append(len(sol_path)-1)
+            else:
+                if conf_count in unsolved_boards:
+                    unsolved_boards[conf_count].append(start_state)
+                else:
+                    unsolved_boards[conf_count] = [start_state]
+        # Show basic statistics
+        print
+        avg_steps_c = round(steps_sum / boards_n, 2)
+        percent_solved = (float(solved_n) / boards_n) * 100
+        print('======BASIC STATS======')
+        print('Number of generated boards: %d') % boards_n
+        print('Number of solved boards: %d ... ' + str(round(percent_solved, 2)) + ' %%') % solved_n
+        print('Average number of steps for solution: ' + str(avg_steps_c))
+        # Show detailed statistics
+        print('======DETAILED STATS======')
+        for conf_count, (solved_count, steps_sum) in sorted(solved_stats.iteritems()):
+            print('===%d conflicts===') % conf_count
+            avg_steps_c = round(steps_sum / solved_count, 2)
+            total_boards = solved_count + len(unsolved_boards.get(solved_count, []))
+            percent_solved = (float(solved_count) / total_boards) * 100
+            print('Generated boards: %d') % total_boards
+            print('Solved boards: %d ... ' + str(round(percent_solved, 2)) + ' %%') % solved_count
+            print('Average steps: ' + str(avg_steps_c))

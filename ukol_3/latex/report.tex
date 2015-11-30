@@ -15,14 +15,9 @@
 \maketitle
 
 \section{Introduction}
-The goal of the work is to implement a solution to the ''8-queens problem'' using the "MIN-conflict" heuristic. There are 8 queens 
+The goal of the work is to implement a solution to the ''8-queens problem'' using the "MIN-conflict" heuristic. There are 8 queens on a chess board. The goal is to rearange the queens so they do not attack each other.
 
 \section{Solution design}
-The 8-puzzle can by solved by creating and searching a state space, which has a size of 9! = 362,880 states. Only half of the states are reachable from any given (start) state -- are solvable (Latombe, 2011). Even so, the number is quite large and for 15-puzzle (16! possible states) it is much higher. 
-
-But another way of solving the puzzle exists -- to use a heuristic. This way, the optimal (or even any) solution may not be found, but the process is much faster. Following two heuristics are used: h1 -- min. wrong placings (Hamming distance), h2 -- min. Manhattan distance.
-
-A board state is represented by a hash of <tile name> => <tile x,y coordinates>, ''moved tile'' field and `'h\_value'' field. Tiles are named 1--8, a blank square is named 0 and behaves like a regular tile. 
 
 \section{Implementation}
 The program was implemented in Python. A state is saved in a variable with the following structure (example for a goal state):

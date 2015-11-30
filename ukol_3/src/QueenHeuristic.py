@@ -8,7 +8,7 @@ class QueenHeuristic(object):
         column_state = copy.deepcopy(original_state)
         # For every column
         for j in range(0,8):
-            print ('====col. %s====') % j
+            #print ('====col. %s====') % j
             # Get current position of the queen in a column.
             queen_i = self._get_queen_pos_in_col(column_state,j)
             # Get current conflict count.
@@ -29,7 +29,7 @@ class QueenHeuristic(object):
             new_queen_i = random.choice(min_rows)
             # Check conflict count
             if min_cc > current_cc:
-                print('skip')
+                #print('skip')
                 continue    # skip the column
             # Edit the current state
             column_state[new_queen_i][j] = 1
@@ -39,7 +39,7 @@ class QueenHeuristic(object):
         return column_state
 
     def _get_queen_pos_in_col(self, state, col_n):
-        for i in range(0,8):
+        for i in range(0, 8):
             if state[i][col_n] == 1:
                 return i
 
@@ -140,7 +140,7 @@ class QueenHeuristic(object):
         return queens_count - 2
 
     def show_board(self, state):
-        print('==============')
+        #print('==============')
         for row in state:
             print row
         print('conflicts count: %d') % self.count_total_conflicts(state)
