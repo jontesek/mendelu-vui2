@@ -6,8 +6,9 @@ class QueenHeuristic(object):
 
     def choose_min_conflict_positions(self, original_state):
         column_state = copy.deepcopy(original_state)
+        performed_steps = []
         # For every column
-        for j in range(0,8):
+        for j in range(0, 8):
             #print ('====col. %s====') % j
             # Get current position of the queen in a column.
             queen_i = self._get_queen_pos_in_col(column_state,j)
@@ -35,8 +36,11 @@ class QueenHeuristic(object):
             column_state[new_queen_i][j] = 1
             column_state[queen_i][j] = 0
             #self._show_board(column_state)
+            step = ((queen_i, j), (new_queen_i, j))
+            print step[0], '->', step[1], '|',
+            performed_steps.append(step)
         # return last state
-        return column_state
+        return column_state, performed_steps
 
     def _get_queen_pos_in_col(self, state, col_n):
         for i in range(0, 8):

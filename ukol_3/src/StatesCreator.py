@@ -18,7 +18,7 @@ class StatesCreator(object):
             [0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0],
         ]
-        # Loop until conflict reached.
+        # Loop until a conflict is reached.
         conf_found = False
         while not conf_found:
             # Populate columns
