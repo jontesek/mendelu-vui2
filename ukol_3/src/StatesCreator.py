@@ -1,17 +1,34 @@
 from random import randint
+from QueenHeuristic import QueenHeuristic
 
 class StatesCreator(object):
 
+    def __init__(self):
+        self.qh = QueenHeuristic()
+
     def generate_random_start_state(self):
-        used_cols = []
-        while len(used_cols) < 8:
-            for j in range(0,8):
-                rand_i = randint(0,8)
-
-
-
-
-
+        # Default state
+        state = [
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0],
+        ]
+        # Loop until conflict reached.
+        conf_found = False
+        while not conf_found:
+            # Populate columns
+            for j in range(0, 8):
+                rand_i = randint(0, 7)  # Select random row in the column.
+                state[rand_i][j] = 1    # Place queen there.
+            # Check if there are any conflicts.
+            conf_c = self.qh.count_total_conflicts(state)
+            if conf_c > 0:
+                return state
 
     def get_lecture_state(self):
         state = [

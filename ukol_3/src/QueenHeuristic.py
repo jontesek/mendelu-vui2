@@ -139,7 +139,8 @@ class QueenHeuristic(object):
         # result - minus the original queen
         return queens_count - 2
 
-    def _show_board(self, state):
+    def show_board(self, state):
         print('==============')
         for row in state:
             print row
+        print('conflicts count: %d') % self.count_total_conflicts(state)

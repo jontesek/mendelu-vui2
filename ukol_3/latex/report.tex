@@ -15,7 +15,7 @@
 \maketitle
 
 \section{Introduction}
-The goal of the work is to implement a solution to the ''8-queens problem'' using the assigned heuristic. There is a board 3x3 with 8 tiles inside (and one blank square). The goal is to rearrange all tiles so they are in order.
+The goal of the work is to implement a solution to the ''8-queens problem'' using the "MIN-conflict" heuristic. There are 8 queens 
 
 \section{Solution design}
 The 8-puzzle can by solved by creating and searching a state space, which has a size of 9! = 362,880 states. Only half of the states are reachable from any given (start) state -- are solvable (Latombe, 2011). Even so, the number is quite large and for 15-puzzle (16! possible states) it is much higher. 

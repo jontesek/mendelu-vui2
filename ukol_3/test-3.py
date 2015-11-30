@@ -8,4 +8,6 @@ file_paths = {
 }
 cqw = ChessQueenWorld(file_paths)
 
-cqw.solve_sample_board(4)
+#cqw.solve_sample_board(4)
+#cqw.solve_random_board()
+cqw.bulk_solve(10)
