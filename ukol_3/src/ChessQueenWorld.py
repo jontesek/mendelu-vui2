@@ -16,15 +16,12 @@ class ChessQueenWorld(object):
 
     def solve_random_board(self):
         gen_state = self.states_creator.generate_random_start_state()
-        self._show_board(gen_state)
         (sol_path, total_steps) = self._solve_given_board(gen_state)
         solution = sol_path if sol_path else False
-        #self._show_solution(sol_path)
         return solution, gen_state, total_steps
 
     def solve_sample_board(self, num):
         gen_state = self.states_creator.get_sample_start_state(num)[0]
-        self._show_board(gen_state)
         (sol_path, total_steps) = self._solve_given_board(gen_state)
         self._show_solution(sol_path)
 
@@ -44,6 +41,9 @@ class ChessQueenWorld(object):
         conf_count = self.heuristic.count_total_conflicts(current_state)
         solution_path.append(current_state)
         total_steps = 0
+        # Show board
+        self._show_board(start_state)
+        print('Number of conflicts: %d') % conf_count
         # Repeat until there are no conflicts.
         iter_n = 0
         while conf_count > 0:
@@ -62,6 +62,13 @@ class ChessQueenWorld(object):
             current_state = new_state
             total_steps += len(performed_steps)
         # Show solution
+        print  # blank line
+        if solution_path:
+            print('>>>Solved in %d steps.') % total_steps
+            self._show_board(solution_path[-1])
+        else:
+            print('<<<NOT solved after %d iterations.') % self.max_iter_count
+        # result
         return solution_path, total_steps
 
     def _show_board(self, state):
@@ -76,31 +83,25 @@ class ChessQueenWorld(object):
         solved_stats = {}   # key is number of conflicts in start board
         # Generate and solve some boards
         for i in range(1, boards_n+1):
-            print('=====Board n. %d=====') % i
+            print('======Board n. %d======') % i
             # Get and solve random board.
             (sol_path, start_state, total_steps) = self.solve_random_board()
             conf_count = self.heuristic.count_total_conflicts(start_state)
             #self._show_board(start_state)
             # Check if a solution was found.
             if sol_path:
-                sol_p_n = len(sol_path) - 1
-                print
-                print('>>>Solved in %d iterations.') % sol_p_n
-                self._show_board(sol_path[-1])
                 # Increment common values.
                 solved_n += 1
-                steps_sum += len(sol_path)-1
+                steps_sum += total_steps
                 # Save values for initial conflicts count.
                 if conf_count in solved_stats:
                     solved_stats[conf_count][0] += 1
-                    solved_stats[conf_count][1] += sol_p_n
+                    solved_stats[conf_count][1] += total_steps
                 else:
                     solved_stats[conf_count] = []
                     solved_stats[conf_count].append(1.0)
-                    solved_stats[conf_count].append(sol_p_n)
+                    solved_stats[conf_count].append(total_steps)
             else:
-                print
-                print('<<<NOT solved after %d iterations.') % self.max_iter_count
                 if conf_count in unsolved_boards:
                     unsolved_boards[conf_count].append(start_state)
                 else:
