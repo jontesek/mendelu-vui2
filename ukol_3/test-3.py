@@ -6,7 +6,7 @@ file_paths = {
     'input_dir': os.path.abspath('input'),
     'output_dir': os.path.abspath('output')
 }
-cqw = ChessQueenWorld(file_paths)
+cqw = ChessQueenWorld()
 
 #cqw.solve_sample_board(4)
 #cqw.solve_random_board()

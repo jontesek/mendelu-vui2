@@ -3,9 +3,10 @@
 \usepackage{xltxtra}
 \usepackage{hyperref}
 \usepackage{listings}
+\usepackage{graphicx}
 %\usepackage[a4paper]{geometry}
 \begin{document}
-\title{\vspace{-1.0cm}Artificial Intelligence II - Homework 3 \\ \textbf{8 queens}}
+\title{\vspace{-1.0cm}Artificial Intelligence II -- Homework 3 \\ \textbf{8 queens puzzle}}
 \author{Jonáš Petrovský\\
         Faculty of Business and Economics,\\
 		Mendel University in Brno,\\
@@ -15,97 +16,101 @@
 \maketitle
 
 \section{Introduction}
-The goal of the work is to implement a solution to the ''8-queens problem'' using the "MIN-conflict" heuristic. There are 8 queens on a chess board. The goal is to rearange the queens so they do not attack each other.
+The goal of the work is to implement a solution to the ''8 queens puzzle'' using the "MIN-conflict" heuristic. There are 8 queens on a chess board. The goal is to rearrange the queens so that no two queens threaten each other.
 
 \section{Solution design}
+There are 4,426,165,368 possible arrangements of eight queens on an 8×8 board, but only 92 solutions (Wikipedia, 2015). We could use brute-force, but there exists a smarter way. We apply a rule that in one column can only be one queen. Then we use the MIN-conflict heuristic to select the best following state.
 
 \section{Implementation}
-The program was implemented in Python. A state is saved in a variable with the following structure (example for a goal state):
+The program was implemented in Python. A state is saved as a 2D array representing a chess board, where 1 means there is a queen on the square and 0 that there is no queen. Example for lecture state 1:
 \begin{lstlisting}[language=python]
-self.goal_state = {
-            'tiles': {
-                1: (1,1), 2: (1,2), 3: (1,3),
-                8: (2,1), 0: (2,2), 4: (2,3),
-                7: (3,1), 6: (3,2), 5: (3,3)
-            },
-            'moved_tile': None,
-            'h_value': 0
-}
+state = [
+            [0,0,0,0,1,0,0,0],
+            [1,0,0,0,0,0,0,0],
+            [0,0,0,0,0,1,0,0],
+            [0,0,0,1,0,0,0,0],
+            [0,1,0,0,0,0,0,0],
+            [0,0,0,0,0,0,1,0],
+            [0,0,1,0,0,0,0,0],
+            [0,0,0,0,0,0,0,1],
+]
 \end{lstlisting}
-All visited states are saved in ''solution\_path'' list (in order). There is a main class \textbf{PuzzleWorld} with following public methods: 
+All visited states are saved in ''solution\_path'' list (in order). There is a main class \textbf{ChessQueenWorld} with following public methods: 
 \begin{itemize}
-\item \verb|solve_given_puzzle(start_state, h_type)|
-\item \verb|solve_random_puzzle(h_type)|
-\item \verb|bulk_solve(number_of_puzzles, h_type)|
-\item \verb|bulk_solve_compare(number_of_puzzles)|
-\item \verb|generate_start_state()|
+\item \verb|solve_given_board(start_state)|
+\item \verb|solve_random_board()|
+\item \verb|solve_sample_board(number)|
+\item \verb|bulk_solve(number_of_boards)|
 \end{itemize}
 
-The main method \verb|solve_given_puzzle| accepts a start state and tries to find a solution using given heuristic. The general algorithm:
+The main method \verb|solve_given_board()| accepts a start state and tries to find a solution using the heuristic.
 \begin{enumerate}
 \item Reset a solution path.
 \item Insert a start state into the solution path.
-\item While tiles in current state != tiles in goal state:
+\item While conflicts count > 0 OR iterations count <= 500:
 	\begin{enumerate}
-	\item Find possible moves towards zero tile.
-           \item For every move create a new state.
-           \item Check if the created states are valid -- so far unvisited (not present in the solution path). If there are no valid states, a solution cannot be found -- a message of failure is displayed and the program ends.
-           \item Calculate heuristic value for every new valid state.
-           \item Choose a state with the lowest heuristic value, insert it into the solution path and mark it as current.
+	\item Choose a new queen position with min. number of conflicts.
+	\item Check if the new state is already in solution path.
+	\item If yes, re-run the method.
+	\item If not, add it to the solution.
 	\end{enumerate}
 \end{enumerate}
+If there are no conflicts, a message of success and number of performed moves are displayed.
 
-If the goal state was reached, a message of success and number of performed moves (length of \texttt{solution\_path} - 1) are displayed. Then the solution path is returned to the calling method.
+Class \textbf{QueenHeuristics} implements the calculation of ''MIN-conflict'' heuristic. For every column, we try to place a queen  on different squares and count the number of conflicts on every position. Than the position with the lowest number is chosen. However, if the count is higher than count on the queen's original position, we choose nothing.
 
-Class \textbf{PuzzleHeuristics} implements the calculation of heuristics:
-\begin{enumerate}
-\item Hamming distance -- number of tiles out of the correct place.
-\item Manhattan distance -- the sum of minimum number of steps (vertical and horizontal) to move every tile in its goal position.
-\end{enumerate}
-For both heuristics we choose the minimal value. 
+Class \textbf{StatesCreator} contains sample states and \verb|generate_random_start_state()| method.
 
-Class \textbf{PuzzleStatistics} is used for performing and evaluating simulations. Method \texttt{bulk\_solve} solves given number of randomly generated puzzles by using given heuristic. Method \verb|bulk_solve_and_compare| does the same but every puzzle is solved by both heuristics and data about solutions are being stored and later processed and displayed. 
+There is a simple test class in folder /tests, which can be used to check (for sample states), whether heuristic method returns the correct number of conflicts for given state. The class can be used in \verb|test-3-check.py| file.
 
 The program can be run by typing the following command into the operating system's terminal (Python 2.7 has to be installed on the system): \\ 
-\verb|python run-2.py| \\
-What the program should do must be stated in the run-2.py source code (the script has no parameters).
+\verb|python run-3.py| \\
+What the program should do must be stated in the run-3.py source code (the script has no parameters).
 
 \section{Results}
+All resulting text files are placed in /output folder. The first matrix is the start state, then the performed steps and the final state are displayed.
 
-The method \verb|bulk_solve_and_compare| was used for experiments. Table \ref{table:simres} shows results of simulations for 1,000 and 100,000 random puzzles (start states). 
+\subsection{Lecture start states}
+\textbf{Board 1} (1 conflict): Solved in 2 steps. More in lecture\_1.txt. \\
+\textbf{Board 2} (28 conflicts): Solved in 10 steps. More in lecture\_2.txt.
 
-Notes: h1 = Hamming distance, h2 = Manhattan distance, efficiency = average number of moves needed to find a solution, min. moves = global minimal number of moves for finding any solution.
+\subsection{Generated start states}
+The method \verb|generate_random_start_state()| can be used to produce some of the 16,777,216 possible queens combinations  (one queen in every column). ''Efficiency'' means average number of steps (queen moves) for solution. ''Success rate'' shows how many percent of the generated start states has the algorithm been able to solve.  
 
 \renewcommand{\arraystretch}{1.5}
 \begin{table}[h!]
 \centering
-\caption{Results of simulations for many random start states}
-\label{table:simres}
-\begin{tabular}{ | l | c| c|}
+\caption{Total results generated start states}
+\label{table:totalres}
+\begin{tabular}{ | l | c| c|c|}
 \hline
-N. of puzzles & 1,000 & 100,000 \\ 
+N. of boards & 100 & 1,000 & 10,000 \\ 
 \hline
-h1 solved [\%] & 0.9 & 0.91 \\
-h2 solved [\%] & 9.9 & 10.89 \\
-h1 efficiency & 80 & 91 \\
-h2 efficiency & 68 & 62 \\
-h1 min. moves & 18 & 2 \\
-h2 min. moves & 10 & 2 \\
+Success rate [\%] & 96 & 95.2 & 94.37 \\
+Efficiency [steps] & 18.34 & 17.6 & 17.49 \\
 \hline
 \end{tabular}
 \end{table}
 
-It must be noted that results for different simulations of 1,000 puzzles vary quite a lot. But a simulation for 100,000 puzzles is sufficient to determine how is each heuristic successful in solving the 8-puzzle problem. 
+From Table \ref{table:totalres} can be seen that the algorithm managed to solve the overwhelming majority of generated boards (95 \%) in 17 steps on average. 
 
-We can see that h2 is much better (about 10x) than h1 in terms of percentage of puzzles solved (11 vs 1 \%). H2 average efficiency is also better than h1, but the difference is not so huge (62 vs. 91 -- about 33 \%). 
+Subsequently, the number of conflicts in the start states and its impact on success rate and efficiency is examined. We take values from simulation of 10,000 boards to present the most accurate conclusions.
 
-Regarding global min. number of moves can be said that both heuristic can solve some puzzles in a very short time. On the basis of performed 1,000 simulations can be seen that h2 sometimes has the number lower but other times it is the same. But it seems that h1 has the number never lower.
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=\textwidth]{eff-chart.png}
+\caption{Relation between number of initial conflicts and efficiency} 
+\label{fig:eff}
+\end{figure}
 
-In conclusion, even h2 did not manage to solve more than about 10 \% of given start states (puzzles, board configurations). Because precisely 50 \% of start states have a solution, it is not a very good result. But the algorithm will be much faster than human in solving selected puzzles or human trying to solve all the puzzles. Other algorithms (like A*) or heuristics could give us a better result, but these are not the topic of this work.
+As can be seen in Figure \ref{fig:eff}, there is an obvious correlation between number of initial conflicts and efficiency -- the more initial conflicts, the more steps need to be performed (on average).  Of course, there are some irregularities, but on the whole, the conclusion is correct. 
+
+The success rate was 100 \%, except for 1, 17 and 18 initial conflicts, where the rate was 10.81, 5.83 and 50 \%, respectively. The overwhelming majority (94~\%) of generated states contained 3--14 conflicts (categories with more than 100 states). The aforementioned success rate might be the result of too low number of tested examples, but also a high complexity of the given start states. For a detailed examination a larger number of generated states would be needed.
+
 
 \section{References}
 
-Latombe, J. C. Search problems. \textit{Stanford AI Lab} [online]. 2011 [accessed 8.~11.~2015]. Available at: \url{http://ai.stanford.edu/~latombe/cs121/2011/slides/B-search-problems.ppt}
+Eight queens puzzle. \textit{Wikipedia: the free encyclopedia} [online]. San Francisco (CA): Wikimedia Foundation, last updated 3. 12. 2015 [accessed 2015-12-05]. Available at: https://en.wikipedia.org/wiki/Eight\_queens\_puzzle
 
 
 \end{document}  %End of document.

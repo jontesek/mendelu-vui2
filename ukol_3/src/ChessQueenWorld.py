@@ -4,37 +4,26 @@ from StatesCreator import StatesCreator
 
 class ChessQueenWorld(object):
 
-    def __init__(self, file_paths):
-        # Absolute file paths to input and output directories.
-        self.file_paths = file_paths
+    def __init__(self):
         # Heuristic object
         self.heuristic = QueenHeuristic()
         # States creator object
         self.states_creator = StatesCreator()
-        # Constants
+        # Max. number of iterations for searching a solution.
         self.max_iter_count = 500
 
     def solve_random_board(self):
         gen_state = self.states_creator.generate_random_start_state()
-        (sol_path, total_steps) = self._solve_given_board(gen_state)
+        (sol_path, total_steps) = self.solve_given_board(gen_state)
         solution = sol_path if sol_path else False
         return solution, gen_state, total_steps
 
     def solve_sample_board(self, num):
         gen_state = self.states_creator.get_sample_start_state(num)[0]
-        (sol_path, total_steps) = self._solve_given_board(gen_state)
-        self._show_solution(sol_path)
+        (sol_path, total_steps) = self.solve_given_board(gen_state)
+        #self._show_solution(sol_path)
 
-    def _show_solution(self, solution_path):
-        print('>>>>Solution<<<<')
-        if not solution_path:
-            exit('No solution found.')
-        print('Number of iterations: %d') % (len(solution_path) - 1)
-        print('Final state: ')
-        self._show_board(solution_path[-1])
-        print('{n. of conflists: %d}') % self.heuristic.count_total_conflicts(solution_path[-1])
-
-    def _solve_given_board(self, start_state):
+    def solve_given_board(self, start_state):
         # Prepare variables
         solution_path = []
         current_state = start_state
@@ -47,6 +36,7 @@ class ChessQueenWorld(object):
         # Repeat until there are no conflicts.
         iter_n = 0
         while conf_count > 0:
+            # Check n. of performed iterations
             if iter_n > self.max_iter_count:
                 return False, 0
             iter_n += 1
@@ -71,11 +61,7 @@ class ChessQueenWorld(object):
         # result
         return solution_path, total_steps
 
-    def _show_board(self, state):
-        for row in state:
-            print row
-
-    def bulk_solve(self, boards_n):
+    def bulk_solve(self, boards_n, csv = False):
         # Prepare variables for statistics
         steps_sum = 0.0
         solved_n = 0
@@ -118,10 +104,27 @@ class ChessQueenWorld(object):
         # Show detailed statistics
         print('======DETAILED STATS======')
         for conf_count, (solved_count, steps_sum) in sorted(solved_stats.iteritems()):
-            print('===%d conflicts===') % conf_count
             avg_steps_c = round(steps_sum / solved_count, 2)
             total_boards = solved_count + len(unsolved_boards.get(solved_count, []))
             percent_solved = (float(solved_count) / total_boards) * 100
-            print('Generated boards: %d') % total_boards
-            print('Solved boards: %d ... ' + str(round(percent_solved, 2)) + ' %%') % solved_count
-            print('Average steps: ' + str(avg_steps_c))
+            if csv:
+                print str(conf_count)+','+str(round(percent_solved, 2))+','+str(avg_steps_c)
+            else:
+                print('===%d conflicts===') % conf_count
+                print('Generated boards: %d') % total_boards
+                print('Solved boards: %d ... ' + str(round(percent_solved, 2)) + ' %%') % solved_count
+                print('Average steps: ' + str(avg_steps_c))
+
+    def _show_board(self, state):
+        for row in state:
+            print row
+
+    def _show_solution(self, solution_path):
+        print('>>>>Solution<<<<')
+        if not solution_path:
+            exit('No solution found.')
+        print('Number of iterations: %d') % (len(solution_path) - 1)
+        print('Final state: ')
+        self._show_board(solution_path[-1])
+        print('{n. of conflists: %d}') % self.heuristic.count_total_conflicts(solution_path[-1])
+

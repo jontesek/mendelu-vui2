@@ -1,6 +1,7 @@
 from random import randint
 from QueenHeuristic import QueenHeuristic
 
+
 class StatesCreator(object):
 
     def __init__(self):
@@ -29,19 +30,6 @@ class StatesCreator(object):
             conf_c = self.qh.count_total_conflicts(state)
             if conf_c > 0:
                 return state
-
-    def get_lecture_state(self):
-        state = [
-            [0,0,0,0,1,0,0,0],
-            [1,0,0,0,0,0,0,0],
-            [0,0,0,0,0,1,0,0],
-            [0,0,0,1,0,0,0,0],
-            [0,1,0,0,0,0,0,0],
-            [0,0,0,0,0,0,1,0],
-            [0,0,1,0,0,0,0,0],
-            [0,0,0,0,0,0,0,1],
-        ]
-        return state
 
     def get_sample_start_state(self, num):
         # lecture example 1
